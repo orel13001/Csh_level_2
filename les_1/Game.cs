@@ -88,10 +88,18 @@ namespace les_1
         /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[30];
-            for (int i = 0; i < _objs.Length; i++)
+            _objs = new BaseObject[60];
+            for (int i = 0; i < _objs.Length/3; i++)
             {
                 _objs[i] = new BaseObject(new Point(600, i * 20), new Point(15 - i, 15 - i), new Size(20, 20));
+            }
+            for (int i = _objs.Length / 3; i < _objs.Length - 8; i++)
+            {
+                _objs[i] = new Star(new Point(600, i * 30-600), new Point(i, 0), new Size(5, 5));
+            }
+            for (int i = _objs.Length - 8; i <  _objs.Length; i++)
+            {
+                _objs[i] = new Meteor(new Point(i*50-2500, 0), new Point(10, (i+5)*10), new Size(10,10));
             }
         }
 

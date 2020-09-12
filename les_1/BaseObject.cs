@@ -31,19 +31,20 @@ namespace les_1
             Dir = dir;
             Size = size;
         }
-
+        private static Image img = Image.FromFile(@"meteor_PNG8.png");
         /// <summary>
         /// отрисовка объектов на форме
         /// </summary>
-        public void Draw()
+        public virtual void Draw()
         {
             Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+            
         }
 
         /// <summary>
         /// обновление местоположения объекта
         /// </summary>
-        public void Update()
+        public virtual void Update()
         {
             Pos.X = Pos.X + Dir.X;
             Pos.Y = Pos.Y + Dir.Y;
