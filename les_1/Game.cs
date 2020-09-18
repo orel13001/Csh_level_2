@@ -32,6 +32,12 @@ namespace les_1
         private static Bullet _bullet;
         private static Asteroid[] _asteroids;
 
+        private static Random rnd = new Random();
+
+        static int spd = rnd.Next(5, 50);
+        static int size = rnd.Next(5, 50);
+
+
         static Game() { }
 
 
@@ -82,6 +88,9 @@ namespace les_1
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
+            foreach (BaseObject obj in _asteroids)
+                obj.Draw();
+            _bullet.Draw();
             Buffer.Render();
         }
 
@@ -92,20 +101,17 @@ namespace les_1
         {
 
 
-            _objs = new BaseObject[30];
+            _objs = new BaseObject[33];
             _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-            _asteroids = new Asteroid[3];
-            Random rnd = new Random();
-
-            int r = rnd.Next(5, 50);
+            _asteroids = new Asteroid[10];
             for (int i = 0; i< _objs.Length; i++)
             {                
-                _objs[i] = new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-r, r), new Size(3, 3));
+                _objs[i] = new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(3, 3));
             }
 
             for(int i = 0; i < _asteroids.Length; i++)
             {
-                _asteroids[i] = new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(-r / 5, r), new Size(r, r));
+                _asteroids[i] = new Asteroid(new Point(500, rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(size, size));
             }
 
 
@@ -127,8 +133,19 @@ namespace les_1
 
         public static void Update()
         {
+            _bullet.Update();
             foreach (BaseObject obj in _objs)
                 obj.Update();
+            for (int i = 0; i <_asteroids.Length; i++)
+            {
+                _asteroids[i].Update();
+                if (_bullet.Collision(_asteroids[i]))
+                {
+                    _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+                    _asteroids[i] = new Asteroid(new Point(Game.Width, 200), new Point(-spd, spd), new Size(size, size));
+                }
+            }
+            
         }
     }
 }

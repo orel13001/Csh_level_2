@@ -42,14 +42,7 @@ namespace les_1
         /// <summary>
         /// обновление местоположения объекта
         /// </summary>
-        public virtual void Update()
-        {
-            Pos.X = Pos.X + Dir.X;
-            if (Pos.X < 0)
-            {
-                Pos.X = Game.Width + Size.Width;
-            }
-        }
+        public abstract void Update();
         //{
         //    Pos.X = Pos.X + Dir.X;
         //    Pos.Y = Pos.Y + Dir.Y;
