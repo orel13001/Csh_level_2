@@ -29,6 +29,8 @@ namespace les_1
         public static int Height { get; set; }
 
         public static BaseObject[] _objs;
+        private static Bullet _bullet;
+        private static Asteroid[] _asteroids;
 
         static Game() { }
 
@@ -39,7 +41,7 @@ namespace les_1
         /// <param name="form">форма для отрисовки</param>
         public static void Init(Form form)
         {
-            Load();
+            
 
             // Графическое устройство для вывода графики
             Graphics g;
@@ -52,8 +54,8 @@ namespace les_1
             Height = form.ClientSize.Height;
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+            Load();
 
-            
 
             Timer timer = new Timer { Interval = 100 };
             timer.Start();
@@ -88,19 +90,38 @@ namespace les_1
         /// </summary>
         public static void Load()
         {
-            _objs = new BaseObject[60];
-            for (int i = 0; i < _objs.Length/3; i++)
-            {
-                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(15 - i, 15 - i), new Size(20, 20));
+
+
+            _objs = new BaseObject[30];
+            _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+            _asteroids = new Asteroid[3];
+            Random rnd = new Random();
+
+            int r = rnd.Next(5, 50);
+            for (int i = 0; i< _objs.Length; i++)
+            {                
+                _objs[i] = new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-r, r), new Size(3, 3));
             }
-            for (int i = _objs.Length / 3; i < _objs.Length - 8; i++)
+
+            for(int i = 0; i < _asteroids.Length; i++)
             {
-                _objs[i] = new Star(new Point(600, i * 30-600), new Point(i, 0), new Size(5, 5));
+                _asteroids[i] = new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(-r / 5, r), new Size(r, r));
             }
-            for (int i = _objs.Length - 8; i <  _objs.Length; i++)
-            {
-                _objs[i] = new Meteor(new Point(i*50-2500, 0), new Point(10, (i+5)*10), new Size(10,10));
-            }
+
+
+
+            //for (int i = 0; i < _objs.Length/3; i++)
+            //{
+            //    _objs[i] = new BaseObject(new Point(600, i * 20), new Point(15 - i, 15 - i), new Size(20, 20));
+            //}
+            //for (int i = _objs.Length / 3; i < _objs.Length - 8; i++)
+            //{
+            //    _objs[i] = new Star(new Point(600, i * 30-600), new Point(i, 0), new Size(5, 5));
+            //}
+            //for (int i = _objs.Length - 8; i <  _objs.Length; i++)
+            //{
+            //    _objs[i] = new Meteor(new Point(i*50-2500, 0), new Point(10, (i+5)*10), new Size(10,10));
+            //}
         }
 
 
