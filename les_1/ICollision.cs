@@ -7,6 +7,9 @@ using System.Drawing;
 
 namespace les_1
 {
+    /// <summary>
+    /// интерфейс реализует методы обработки столкновения двух объектов
+    /// </summary>
     interface ICollision
     {
         bool Collision(ICollision obj);

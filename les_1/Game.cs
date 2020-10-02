@@ -98,12 +98,6 @@ namespace les_1
         /// </summary>
         public static void Draw()
         {
-            // Проверяем вывод графики
-            //Buffer.Graphics.Clear(Color.Black);
-            //Buffer.Graphics.DrawRectangle(Pens.White, new Rectangle(100, 100, 200, 200));
-            //Buffer.Graphics.FillEllipse(Brushes.White, new Rectangle(100, 100, 200, 200));
-            //Buffer.Render();
-
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
@@ -118,8 +112,6 @@ namespace les_1
         /// </summary>
         public static void Load()
         {
-
-
             _objs = new List<BaseObject>();
             _bullet = new Bullet(new Point(0, rnd.Next(0, Game.Height)), new Point(5, 0), new Size(4, 1));
             _ufo = new List<UFO>();
@@ -136,21 +128,6 @@ namespace les_1
             {
                 _ufo.Add(new UFO(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(45, 28)));
             }
-
-
-
-            //for (int i = 0; i < _objs.Length/3; i++)
-            //{
-            //    _objs[i] = new BaseObject(new Point(600, i * 20), new Point(15 - i, 15 - i), new Size(20, 20));
-            //}
-            //for (int i = _objs.Length / 3; i < _objs.Length - 8; i++)
-            //{
-            //    _objs[i] = new Star(new Point(600, i * 30-600), new Point(i, 0), new Size(5, 5));
-            //}
-            //for (int i = _objs.Length - 8; i <  _objs.Length; i++)
-            //{
-            //    _objs[i] = new Meteor(new Point(i*50-2500, 0), new Point(10, (i+5)*10), new Size(10,10));
-            //}
         }
 
         /// <summary>
@@ -172,17 +149,6 @@ namespace les_1
                     ufo.ReDraw(new Point(Game.Width - size, rnd.Next(0, Game.Height)));
                 }
             }
-
-            //for (int i = 0; i <_ufo.Length; i++)
-            //{
-            //    _ufo[i].Update();
-            //    if (_bullet.Collision(_ufo[i]))
-            //    {
-            //        _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-            //        _ufo[i] = new UFO(new Point(Game.Width-size, 200), new Point(-spd, spd), new Size(size, size));
-            //    }
-            //}
-
         }
     }
 }

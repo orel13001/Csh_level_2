@@ -26,6 +26,12 @@ namespace les_1
         /// </summary>
         protected Size Size;
 
+        /// <summary>
+        /// Конструктор базоого объекта 
+        /// </summary>
+        /// <param name="pos">позиция базоого объекта </param>
+        /// <param name="dir">скорость базоого объекта </param>
+        /// <param name="size">размер базоого объекта </param>
         protected BaseObject (Point pos, Point dir, Size size)
         {
             try
@@ -72,6 +78,9 @@ namespace les_1
         //}
     }
 
+    /// <summary>
+    /// Класс-исключение для объектов большого размера
+    /// </summary>
     class SizeObjectException : Exception
     {
         public string Msg { get; }
@@ -80,6 +89,9 @@ namespace les_1
             Msg = "Некорректные размеры объекта!";
         }
     }
+    /// <summary>
+    /// Класс-исключение для объектов с большой скоростью
+    /// </summary>
     class SpeedObjectException : Exception
     {
         public string Msg { get; }

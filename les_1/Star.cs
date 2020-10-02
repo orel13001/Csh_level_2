@@ -33,9 +33,6 @@ namespace les_1
                 Pos.X = Game.Width;
                 Pos.Y = rnd.Next(0, Game.Height);
             }
-
-            
-
         }
     }
 }
