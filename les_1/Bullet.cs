@@ -32,6 +32,9 @@ namespace les_1
         public override void Update()
         {
             Pos.X = Pos.X + 3;
+            if (Pos.X > Game.Width)
+                Pos.X = Size.Width;
+
         }
     }
 }
