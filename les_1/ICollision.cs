@@ -11,5 +11,6 @@ namespace les_1
     {
         bool Collision(ICollision obj);
         Rectangle Rect { get; }
+        void ReDraw(Point pt);
     }
 }

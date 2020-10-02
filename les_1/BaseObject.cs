@@ -34,21 +34,21 @@ namespace les_1
                 Pos = pos;
                 Dir = dir;
                 Size = size;
-                if (Size.Width > 30 || Size.Height > 30 || Size.Width <= 0 || Size.Height <= 0) throw new SizeObjectException();
-                if (Dir.X > 40 || Dir.Y > 40) throw new SpeedObjectException();
+                if (Size.Width > 45 || Size.Height > 45 || Size.Width <= 0 || Size.Height <= 0) throw new SizeObjectException();
+                if (Dir.X > 400 || Dir.Y > 400) throw new SpeedObjectException();
             }
             catch(SizeObjectException)
             {
                 MessageBox.Show("Недопустимые размеры обекта! будут пременены параметры по умолчанию!", "Исключение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Size.Width = 30;
-                Size.Height = 30;
+                Size.Width = 45;
+                Size.Height = 45;
             }
-            //catch (SpeedObjectException)
-            //{
-            //    MessageBox.Show("Недопустимая скорость обекта! будут пременены параметры по умолчанию!", "Исключение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    Dir.X = 40;
-            //    Dir.Y = 40;
-            //}
+            catch (SpeedObjectException)
+            {
+                MessageBox.Show("Недопустимая скорость обекта! будут пременены параметры по умолчанию!", "Исключение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Dir.X = 40;
+                Dir.Y = 40;
+            }
         }
         /// <summary>
         /// отрисовка объектов на форме

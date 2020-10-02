@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace les_1
 {
@@ -31,14 +28,15 @@ namespace les_1
         /// Максимальные высота и ширина окна
         /// </summary>
         const int MAX_Width = 1000, MAX_Height = 1000;
-        public static BaseObject[] _objs;
+        public static List<BaseObject> _objs;
         private static Bullet _bullet;
-        private static Asteroid[] _asteroids;
+        private static List<UFO> _ufo;
 
         private static Random rnd = new Random();
 
-        static int spd = rnd.Next(5, 50);
-        static int size = rnd.Next(29, 50);
+        static int spd = rnd.Next(5, 40);
+        static int size = rnd.Next(5, 40);
+        
 
 
         static Game() { }
@@ -90,7 +88,7 @@ namespace les_1
         }
 
         private static void Timer_Tick(object sender, EventArgs e)
-        {    
+        {
             Draw();
             Update();
         }
@@ -109,7 +107,7 @@ namespace les_1
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
-            foreach (BaseObject obj in _asteroids)
+            foreach (BaseObject obj in _ufo)
                 obj.Draw();
             _bullet.Draw();
             Buffer.Render();
@@ -122,17 +120,21 @@ namespace les_1
         {
 
 
-            _objs = new BaseObject[33];
-            _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-            _asteroids = new Asteroid[10];
-            for (int i = 0; i< _objs.Length; i++)
-            {                
-                _objs[i] = new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(3, 3));
+            _objs = new List<BaseObject>();
+            _bullet = new Bullet(new Point(0, rnd.Next(0, Game.Height)), new Point(5, 0), new Size(4, 1));
+            _ufo = new List<UFO>();
+            for (int i = 0; i < 33; i++)
+            {
+                _objs.Add(new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(3, 3)));
+            }
+            for (int i = 0; i < 1; i++)
+            {
+                _objs.Add(new Meteor(new Point(rnd.Next(0, Game.Width), rnd.Next(0, 0)), new Point(spd, spd*10), new Size(3, 3)));
             }
 
-            for(int i = 0; i < _asteroids.Length; i++)
+            for (int i = 0; i < 10; i++)
             {
-                _asteroids[i] = new Asteroid(new Point(500, rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(size, size));
+                _ufo.Add(new UFO(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(45, 28)));
             }
 
 
@@ -158,17 +160,29 @@ namespace les_1
         {
             _bullet.Update();
             foreach (BaseObject obj in _objs)
-                obj.Update();
-            for (int i = 0; i <_asteroids.Length; i++)
             {
-                _asteroids[i].Update();
-                if (_bullet.Collision(_asteroids[i]))
+                obj.Update();
+            }
+            foreach (var ufo in _ufo)
+            {
+                ufo.Update();
+                if (_bullet.Collision(ufo))
                 {
-                    _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-                    _asteroids[i] = new Asteroid(new Point(Game.Width-size, 200), new Point(-spd, spd), new Size(size, size));
+                    _bullet.ReDraw(new Point(0, rnd.Next(0, Game.Height)));
+                    ufo.ReDraw(new Point(Game.Width - size, rnd.Next(0, Game.Height)));
                 }
             }
-            
+
+            //for (int i = 0; i <_ufo.Length; i++)
+            //{
+            //    _ufo[i].Update();
+            //    if (_bullet.Collision(_ufo[i]))
+            //    {
+            //        _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+            //        _ufo[i] = new UFO(new Point(Game.Width-size, 200), new Point(-spd, spd), new Size(size, size));
+            //    }
+            //}
+
         }
     }
 }

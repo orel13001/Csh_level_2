@@ -34,7 +34,12 @@ namespace les_1
             Pos.X = Pos.X + 3;
             if (Pos.X > Game.Width)
                 Pos.X = Size.Width;
+        }
 
+        public void ReDraw(Point pt)
+        {
+            Pos.X = pt.X;
+            Pos.Y = pt.Y;
         }
     }
 }

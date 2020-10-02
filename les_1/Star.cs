@@ -14,7 +14,7 @@ namespace les_1
         {
         }
         
-        private static Image img = Image.FromFile(@"star_PNG1591.png");
+        private static Image img = Image.FromFile(@"img/star_PNG1591.png");
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y);

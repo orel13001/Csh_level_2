@@ -12,8 +12,8 @@ namespace les_1
         static void Main(string[] args)
         {
             Form form = new Form();
-            form.Width = 1500;
-            form.Height = 1600;
+            form.Width = 800;
+            form.Height = 600;
             Game.Init(form);
             form.Show();
             Game.Draw();
