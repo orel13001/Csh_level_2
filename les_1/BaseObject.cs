@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace les_1
 {
+
+    public delegate void Message();
+
     /// <summary>
     /// базовый объект, отображаемый на форме
     /// </summary>
@@ -41,7 +44,7 @@ namespace les_1
                 Dir = dir;
                 Size = size;
                 if (Size.Width > 45 || Size.Height > 45 || Size.Width <= 0 || Size.Height <= 0) throw new SizeObjectException();
-                if (Dir.X > 400 || Dir.Y > 400) throw new SpeedObjectException();
+                //if (Dir.X > 400 || Dir.Y > 400) throw new SpeedObjectException();
             }
             catch(SizeObjectException)
             {

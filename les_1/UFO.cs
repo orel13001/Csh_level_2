@@ -7,8 +7,11 @@ using System.Drawing;
 
 namespace les_1
 {
-    class UFO: BaseObject, ICollision
+    class UFO: BaseObject, ICollision, IComparable<UFO>, ICloneable
     {
+        static Random rnd = new Random();
+        public int Power { get; set; } = 3;
+
         /// <summary>
         /// Конструктор НЛО
         /// </summary>
@@ -37,10 +40,10 @@ namespace les_1
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + Dir.X;
-            Pos.Y = Pos.Y + Dir.Y;
-            if (Pos.X < 0) { Dir.X = -Dir.X; }
-            if (Pos.X > Game.Width-Size.Width) { Dir.X = -Dir.X; }
+            Pos.X = Pos.X - Dir.X;
+            Pos.Y = Pos.Y + Convert.ToInt32(Dir.Y * Math.Sin(Pos.X));
+            if (Pos.X < 0) { Pos.X = Game.Width - Size.Width; }
+            //if (Pos.X > Game.Width-Size.Width) { Dir.X = -Dir.X; }
             if (Pos.Y < 0) { Dir.Y = -Dir.Y; }
             if (Pos.Y > Game.Height-Size.Height) { Dir.Y = -Dir.Y; }
         }
@@ -58,11 +61,38 @@ namespace les_1
         /// <summary>
         /// перерисовка НЛО
         /// </summary>
-        public void ReDraw(Point pt)
+        public void ReDraw()
         {
-            Pos.X = pt.X;
-            Pos.Y = pt.Y;
+            Pos.X = Game.Width;
+            Pos.Y = rnd.Next(0, Game.Height);
         }
+
+        /// <summary>
+        /// Копирование НЛО
+        /// </summary>
+        /// <returns>Копия вызывающего объекта</returns>
+        public object Clone()
+        {
+            UFO ufo = new UFO(new Point(Pos.X, Pos.Y), new Point(Dir.X, Dir.Y), new Size(Size.Width, Size.Height)) { Power = Power};
+            return ufo;
+            
+        }
+
+        /// <summary>
+        /// Сравнение энергии двух НЛО
+        /// </summary>
+        /// <param name="obj">объект для сравнения</param>
+        /// <returns></returns>
+        public int CompareTo(UFO obj)
+        {
+            if (Power > obj.Power)
+                return 1;
+            if (Power < obj.Power)
+                return -1;
+            else
+                return 0;
+        }
+
         /// <summary>
         /// прямоугольник для определения пересечеиня со снарядом
         /// </summary>

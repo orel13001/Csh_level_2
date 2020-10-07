@@ -34,13 +34,15 @@ namespace les_1
 
         private static Random rnd = new Random();
 
-        static int spd = rnd.Next(5, 40);
-        static int size = rnd.Next(5, 40);
-        
+        static int spd = rnd.Next(5, 10);
+        static int size = rnd.Next(5, 10);
+
+        private static Ship _ship = new Ship(new Point(30, 300), new Point(10, 10), new Size(45, 45));
 
 
         static Game() { }
 
+        static Timer timer = new Timer { Interval = 100 };
 
         /// <summary>
         /// инициализация буфера для рисования на форме
@@ -79,12 +81,22 @@ namespace les_1
                 // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
                 Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
                 Load();
+                form.KeyDown += Form_KeyDown;
+                Ship.MessageDie += Finish;
 
-
-                Timer timer = new Timer { Interval = 100 };
                 timer.Start();
                 timer.Tick += Timer_Tick;
             }
+        }
+
+
+
+        private static void Form_KeyDown (object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space) _bullet = new Bullet(new Point(_ship.Rect.X + _ship.Rect.Size.Width, _ship.Rect.Y + _ship.Rect.Size.Height / 2),
+                new Point(40, 0), new Size(4, 1));
+            if (e.KeyCode == Keys.Up) _ship.Up();
+            if (e.KeyCode == Keys.Down) _ship.Down();
         }
 
         private static void Timer_Tick(object sender, EventArgs e)
@@ -102,8 +114,14 @@ namespace les_1
             foreach (BaseObject obj in _objs)
                 obj.Draw();
             foreach (BaseObject obj in _ufo)
-                obj.Draw();
-            _bullet.Draw();
+                obj?.Draw();
+            _bullet?.Draw();
+            _ship?.Draw();
+            if (_ship != null)
+            {
+                Buffer.Graphics.DrawString("Energy: " + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
+            }
+
             Buffer.Render();
         }
 
@@ -113,7 +131,6 @@ namespace les_1
         public static void Load()
         {
             _objs = new List<BaseObject>();
-            _bullet = new Bullet(new Point(0, rnd.Next(0, Game.Height)), new Point(5, 0), new Size(4, 1));
             _ufo = new List<UFO>();
             for (int i = 0; i < 33; i++)
             {
@@ -124,9 +141,9 @@ namespace les_1
                 _objs.Add(new Meteor(new Point(rnd.Next(0, Game.Width), rnd.Next(0, 0)), new Point(spd, spd*10), new Size(3, 3)));
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
-                _ufo.Add(new UFO(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(45, 28)));
+                _ufo.Add(new UFO(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(5, 25), new Size(45, 28)));
             }
         }
 
@@ -135,20 +152,36 @@ namespace les_1
         /// </summary>
         public static void Update()
         {
-            _bullet.Update();
+            _bullet?.Update();
+            if (_bullet?.Rect.X == Game.Width) _bullet = null;
             foreach (BaseObject obj in _objs)
             {
                 obj.Update();
             }
-            foreach (var ufo in _ufo)
+            for (int i = 0; i <_ufo.Count; i++)
             {
-                ufo.Update();
-                if (_bullet.Collision(ufo))
+                if (_ufo[i] == null) continue;
+                _ufo[i].Update();
+                if (_bullet != null && _bullet.Collision(_ufo[i]))
                 {
-                    _bullet.ReDraw(new Point(0, rnd.Next(0, Game.Height)));
-                    ufo.ReDraw(new Point(Game.Width - size, rnd.Next(0, Game.Height)));
+                    System.Media.SystemSounds.Hand.Play();
+                    _bullet = null;
+                    _ufo[i].ReDraw();
+                    continue;
                 }
+                if (!_ship.Collision(_ufo[i])) continue;
+                _ship.EnergyLow(rnd.Next(1, 10));
+                _ufo[i].ReDraw();
+                System.Media.SystemSounds.Asterisk.Play();
+                if (_ship.Energy <= 0) _ship?.Die();
             }
+        }
+
+        public static void Finish ()
+        {
+            timer.Stop();
+            Buffer.Graphics.DrawString("The End", new Font(FontFamily.GenericSansSerif, 60, FontStyle.Underline), Brushes.White, 200, 100);
+            Buffer.Render();
         }
     }
 }

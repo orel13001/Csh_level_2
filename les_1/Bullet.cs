@@ -45,18 +45,11 @@ namespace les_1
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + 3;
-            if (Pos.X > Game.Width)
-                Pos.X = Size.Width;
+            Pos.X = Pos.X + Dir.X;
+            //if (Pos.X > Game.Width)
+            //    Pos.X = Size.Width;
         }
 
-        /// <summary>
-        /// перерисовка снаряда
-        /// </summary>
-        public void ReDraw(Point pt)
-        {
-            Pos.X = pt.X;
-            Pos.Y = pt.Y;
-        }
+
     }
 }
