@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HelthBox.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="UFO.cs" />
     <Compile Include="BaseObject.cs" />

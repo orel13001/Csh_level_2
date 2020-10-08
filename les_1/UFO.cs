@@ -42,8 +42,11 @@ namespace les_1
         {
             Pos.X = Pos.X - Dir.X;
             Pos.Y = Pos.Y + Convert.ToInt32(Dir.Y * Math.Sin(Pos.X));
-            if (Pos.X < 0) { Pos.X = Game.Width - Size.Width; }
-            //if (Pos.X > Game.Width-Size.Width) { Dir.X = -Dir.X; }
+            if (Pos.X < 0) 
+            { 
+                Pos.X = Game.Width - Size.Width;
+                Pos.Y = rnd.Next(0, Game.Height);
+            }
             if (Pos.Y < 0) { Dir.Y = -Dir.Y; }
             if (Pos.Y > Game.Height-Size.Height) { Dir.Y = -Dir.Y; }
         }

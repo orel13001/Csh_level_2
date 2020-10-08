@@ -12,25 +12,33 @@ namespace les_1
 
         public static event Message MessageDie;
 
+        private int _point = 0;
         private int _energy = 100;
         public int Energy => _energy;
+        public int _Point => _point;
 
         public Rectangle Rect => new Rectangle(Pos, Size);
 
         private static Image img = Image.FromFile(@"img/Ship.png");
 
+        public void AddPoint()
+        {
+            _point++;
+        }
+
         public void EnergyLow (int n)
         {
             _energy -= n;
         }
+        public void EnergyUp (int n)
+        {
+            if(_energy < 100)
+            {
+                _energy = Math.Min(100, _energy += n);
+            }
+        }
 
         public Ship(Point pos, Point dir, Size size) : base(pos, dir, size) { }
-
-
-
-
-
-
 
         public override void Draw()
         {
@@ -47,7 +55,7 @@ namespace les_1
         }
         public void Down()
         {
-            if (Pos.Y < Game.Height) Pos.Y = Pos.Y + Dir.Y;
+            if (Pos.Y < Game.Height-Size.Height) Pos.Y = Pos.Y + Dir.Y;
         }
         public void Die()
         {

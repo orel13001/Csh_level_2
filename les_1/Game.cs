@@ -31,6 +31,7 @@ namespace les_1
         public static List<BaseObject> _objs;
         private static Bullet _bullet;
         private static List<UFO> _ufo;
+        private static HelthBox _helth;
 
         private static Random rnd = new Random();
 
@@ -117,9 +118,11 @@ namespace les_1
                 obj?.Draw();
             _bullet?.Draw();
             _ship?.Draw();
+            _helth?.Draw();
             if (_ship != null)
             {
                 Buffer.Graphics.DrawString("Energy: " + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
+                Buffer.Graphics.DrawString("UFO Destroy: " + _ship._Point, SystemFonts.DefaultFont, Brushes.White, 100, 0);
             }
 
             Buffer.Render();
@@ -132,6 +135,9 @@ namespace les_1
         {
             _objs = new List<BaseObject>();
             _ufo = new List<UFO>();
+            _helth = new HelthBox(new Point(Game.Width + rnd.Next(250,600), rnd.Next(0, Game.Height)), new Point (Convert.ToInt32(spd*0.8), Convert.ToInt32(spd * 0.8)), new Size(40,40));
+            //_helth = new HelthBox(new Point(Game.Width, 200), new Point(25, 25), new Size(40, 40));
+
             for (int i = 0; i < 33; i++)
             {
                 _objs.Add(new Star(new Point(rnd.Next(0, Game.Width), rnd.Next(0, Game.Height)), new Point(-spd, spd), new Size(3, 3)));
@@ -145,6 +151,7 @@ namespace les_1
             {
                 _ufo.Add(new UFO(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(5, 25), new Size(45, 28)));
             }
+            
         }
 
         /// <summary>
@@ -152,6 +159,7 @@ namespace les_1
         /// </summary>
         public static void Update()
         {
+            _helth?.Update();
             _bullet?.Update();
             if (_bullet?.Rect.X == Game.Width) _bullet = null;
             foreach (BaseObject obj in _objs)
@@ -167,6 +175,7 @@ namespace les_1
                     System.Media.SystemSounds.Hand.Play();
                     _bullet = null;
                     _ufo[i].ReDraw();
+                    _ship.AddPoint();
                     continue;
                 }
                 if (!_ship.Collision(_ufo[i])) continue;
@@ -174,6 +183,11 @@ namespace les_1
                 _ufo[i].ReDraw();
                 System.Media.SystemSounds.Asterisk.Play();
                 if (_ship.Energy <= 0) _ship?.Die();
+            }
+            if (_helth.Collision(_ship))
+            {
+                _ship.EnergyUp(rnd.Next(1, 10));
+                _helth.ReDraw();
             }
         }
 
