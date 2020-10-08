@@ -10,6 +10,16 @@ namespace les_1
     class Ship : BaseObject, ICollision
     {
 
+        /// <summary>
+        /// Вызывется при столкновении корабля с НЛО 
+        /// </summary>
+        public static event Action<string> CollisionShip;
+        /// <summary>
+        /// Вызывется при лечении корабля
+        /// </summary>
+        public static event Action<string> Helthing;
+
+
         public static event Message MessageDie;
 
         private int _point = 0;
@@ -24,17 +34,20 @@ namespace les_1
         public void AddPoint()
         {
             _point++;
+            Helthing?.Invoke($"{DateTime.Now}: Уничтожено НЛО");
         }
 
         public void EnergyLow (int n)
         {
             _energy -= n;
+            Helthing?.Invoke($"{DateTime.Now}: Столкновение с НЛО. Здоровье уменьшено на {n}");
         }
         public void EnergyUp (int n)
         {
             if(_energy < 100)
             {
                 _energy = Math.Min(100, _energy += n);
+                Helthing?.Invoke($"{DateTime.Now}: Здоровье увеличено на {n}");
             }
         }
 
@@ -59,11 +72,13 @@ namespace les_1
         }
         public void Die()
         {
+            CollisionShip?.Invoke($"{DateTime.Now}: Корабль уничножен. Игра окончена");
             MessageDie?.Invoke();
         }
 
         public bool Collision(ICollision o)
         {
+            
             return o.Rect.IntersectsWith(this.Rect);
         }
 

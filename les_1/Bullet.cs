@@ -9,6 +9,17 @@ namespace les_1
 {
     class Bullet:BaseObject, ICollision
     {
+
+        /// <summary>
+        /// Вызывется при создании снаряда
+        /// </summary>
+        public static event Action<string> CreateBullet;
+
+        /// <summary>
+        /// Вызывется при столкновении снаряда с НЛО снаряда
+        /// </summary>
+        public static event Action<string> CollisionBullet;
+
         /// <summary>
         /// Конструктор снаряда
         /// </summary>
@@ -16,7 +27,9 @@ namespace les_1
         /// <param name="dir">скорость снаряда</param>
         /// <param name="size">размер снаряда</param>
         public Bullet(Point pos, Point dir, Size size) : base(pos, dir, size)
-        { }
+        {
+            CollisionBullet?.Invoke($"{DateTime.Now}: Снаряд создан");
+        }
 
         /// <summary>
         /// прямоугольник для определения пересечеиня с НЛО
@@ -29,6 +42,8 @@ namespace les_1
         /// <returns></returns>
         public bool Collision(ICollision o)
         {
+            if(o.Rect.IntersectsWith(this.Rect))
+                CollisionBullet?.Invoke($"{DateTime.Now}: Снаряд попал в НЛО");
             return o.Rect.IntersectsWith(this.Rect);
         }
 

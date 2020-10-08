@@ -22,6 +22,7 @@ namespace les_1
         {
             this.Size.Width = img.Width;
             this.Size.Height = img.Height;
+            CreateUFO?.Invoke($"{DateTime.Now}: НЛО создано\n");
         }
         private static Image img = Image.FromFile(@"img/ufo.png");
 
@@ -59,7 +60,7 @@ namespace les_1
         /// <returns></returns>
         public bool Collision(ICollision o)
         {
-            return o.Rect.IntersectsWith(this.Rect);
+            return o.Rect.IntersectsWith(this.Rect);            
         }
         /// <summary>
         /// перерисовка НЛО
@@ -100,5 +101,13 @@ namespace les_1
         /// прямоугольник для определения пересечеиня со снарядом
         /// </summary>
         public Rectangle Rect => new Rectangle(Pos, Size);
+
+
+        /// <summary>
+        /// Вызывется при создании НЛО
+        /// </summary>
+        public static event Action<string> CreateUFO;
+
+
     }
 }

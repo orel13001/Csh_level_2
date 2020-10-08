@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 namespace les_1
 {
@@ -79,11 +80,25 @@ namespace les_1
             }
             finally
             {
+                UFO.CreateUFO += s => File.AppendAllText("log.txt", $"{s}\n");
+                Bullet.CollisionBullet += s => File.AppendAllText("log.txt", $"{s}\n");
+                Bullet.CreateBullet += s => File.AppendAllText("log.txt", $"{s}\n");
+                Ship.CollisionShip += s => File.AppendAllText("log.txt", $"{s}\n");
+                Ship.Helthing += s => File.AppendAllText("log.txt", $"{s}\n");
+
+                UFO.CreateUFO += s => Console.Write($"{s}\n");
+                Bullet.CollisionBullet += s => Console.Write($"{s}\n");
+                Bullet.CreateBullet += s => Console.Write($"{s}\n");
+                Ship.CollisionShip += s => Console.Write($"{s}\n"); 
+                Ship.Helthing += s => Console.Write($"{s}\n");
+
+                form.KeyDown += Form_KeyDown;
+                Ship.MessageDie += Finish;
+
+
                 // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
                 Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
                 Load();
-                form.KeyDown += Form_KeyDown;
-                Ship.MessageDie += Finish;
 
                 timer.Start();
                 timer.Tick += Timer_Tick;
