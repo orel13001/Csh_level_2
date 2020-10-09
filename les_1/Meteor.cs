@@ -12,7 +12,10 @@ namespace les_1
         public Meteor(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
         }
-        private static Image img = Image.FromFile(@"meteor_PNG8.png");
+        private static Image img = Image.FromFile(@"img/meteor_PNG8.png");
+        /// <summary>
+        /// отрисовка Метеора
+        /// </summary>
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y); 
