@@ -15,6 +15,9 @@ namespace les_1
         }
         
         private static Image img = Image.FromFile(@"img/star_PNG1591.png");
+        /// <summary>
+        /// отрисовка звёзд
+        /// </summary>
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y);
@@ -22,7 +25,7 @@ namespace les_1
 
 
         /// <summary>
-        /// обновление местоположения объекта
+        /// обновление местоположения звёзд
         /// </summary>
         public override void Update()
         {

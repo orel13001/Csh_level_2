@@ -13,6 +13,9 @@ namespace les_1
         {
         }
         private static Image img = Image.FromFile(@"img/meteor_PNG8.png");
+        /// <summary>
+        /// отрисовка Метеора
+        /// </summary>
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y); 

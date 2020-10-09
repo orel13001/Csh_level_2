@@ -114,7 +114,11 @@ namespace les_1
             if (e.KeyCode == Keys.Up) _ship.Up();
             if (e.KeyCode == Keys.Down) _ship.Down();
         }
-
+        /// <summary>
+        /// Обработчик события тика таймера
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void Timer_Tick(object sender, EventArgs e)
         {
             Draw();
@@ -206,6 +210,9 @@ namespace les_1
             }
         }
 
+        /// <summary>
+        /// метод для обработки события Die
+        /// </summary>
         public static void Finish ()
         {
             timer.Stop();
