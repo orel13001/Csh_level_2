@@ -28,7 +28,7 @@ namespace les_1
         /// <param name="size">размер снаряда</param>
         public Bullet(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
-            CollisionBullet?.Invoke($"{DateTime.Now}: Снаряд создан");
+            CreateBullet?.Invoke($"{DateTime.Now}: Снаряд создан");
         }
 
         /// <summary>

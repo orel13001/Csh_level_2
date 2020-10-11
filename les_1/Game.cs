@@ -31,7 +31,8 @@ namespace les_1
         const int MAX_Width = 1000, MAX_Height = 1000;
         public static List<BaseObject> _objs;
         private static List<Bullet> _bullets = new List<Bullet>();
-        private static List<UFO> _ufo;
+        private static List<UFO> _ufo = new List<UFO>();
+        private static int countUFO = 5;
         private static HelthBox _helth;
 
         private static Random rnd = new Random();
@@ -150,13 +151,21 @@ namespace les_1
             Buffer.Render();
         }
 
+        public static void LoadUFO(int countUFO)
+        {
+            for (int i = 0; i < countUFO; i++)
+            {
+                _ufo.Add(new UFO(new Point(rnd.Next(Game.Width, Game.Width + 50), rnd.Next(0, Game.Height)), new Point(5, 25), new Size(45, 28)));
+            }
+        }
+
         /// <summary>
         /// инициализация массива BaseObject
         /// </summary>
         public static void Load()
         {
             _objs = new List<BaseObject>();
-            _ufo = new List<UFO>();
+            
             _helth = new HelthBox(new Point(Game.Width + rnd.Next(250,600), rnd.Next(0, Game.Height)), new Point (Convert.ToInt32(spd*0.8), Convert.ToInt32(spd * 0.8)), new Size(40,40));
             //_helth = new HelthBox(new Point(Game.Width, 200), new Point(25, 25), new Size(40, 40));
 
@@ -169,11 +178,9 @@ namespace les_1
                 _objs.Add(new Meteor(new Point(rnd.Next(0, Game.Width), rnd.Next(0, 0)), new Point(spd, spd*10), new Size(3, 3)));
             }
 
-            for (int i = 0; i < 5; i++)
-            {
-                _ufo.Add(new UFO(new Point(Game.Width, rnd.Next(0, Game.Height)), new Point(5, 25), new Size(45, 28)));
-            }
-            
+            LoadUFO(countUFO);
+
+
         }
 
         /// <summary>
@@ -195,25 +202,37 @@ namespace les_1
             {
                 obj.Update();
             }
+            if (_ufo.Count == 0)
+            {
+                LoadUFO(++countUFO);
+            }
             for (int i = 0; i <_ufo.Count; i++)
             {
                 if (_ufo[i] == null) continue;
                 _ufo[i].Update();
+                if (_ufo[i].Rect.X <= -45)
+                {
+                    _ufo.RemoveAt(i);
+                    i = _ufo.Count - 1;
+                }
                 for (int j = 0; j < _bullets.Count; j++)
                 {
-                    if (_bullets[j] != null && _bullets[j].Collision(_ufo[i]))
-                    {
+                      if (_bullets[j] != null && _bullets[j].Collision(_ufo[i]))
+                     {
                         System.Media.SystemSounds.Hand.Play();
                         _bullets.RemoveAt(j);
-                        j--;
-                        _ufo[i].ReDraw();
-                        _ship.AddPoint();
+                        j = _bullets.Count - 1;
+                        _ufo.RemoveAt(i);
+                        i = _ufo.Count - 1;
+
+                         _ship . AddPoint();
                         continue;
                     }
                 }
-                if (!_ship.Collision(_ufo[i])) continue;
+                if (_ufo.Count == 0 || !_ship.Collision(_ufo[i])) continue;
                 _ship.EnergyLow(rnd.Next(1, 10));
-                _ufo[i].ReDraw();
+                _ufo.RemoveAt(i);
+                i = _ufo.Count - 1;
                 System.Media.SystemSounds.Asterisk.Play();
                 if (_ship.Energy <= 0) _ship?.Die();
             }
