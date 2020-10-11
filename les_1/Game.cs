@@ -206,25 +206,25 @@ namespace les_1
             {
                 LoadUFO(++countUFO);
             }
-            for (int i = 0; i <_ufo.Count; i++)
+            for (int i = 0; i < _ufo.Count; i++)
             {
                 if (_ufo[i] == null) continue;
                 _ufo[i].Update();
                 if (_ufo[i].Rect.X <= -45)
-                {
-                    _ufo.RemoveAt(i);
-                    i = _ufo.Count - 1;
+                { 
+                    i = DieUFO(i);
+                    continue;
                 }
+                    
+                
                 for (int j = 0; j < _bullets.Count; j++)
                 {
                       if (_bullets[j] != null && _bullets[j].Collision(_ufo[i]))
                      {
                         System.Media.SystemSounds.Hand.Play();
                         _bullets.RemoveAt(j);
-                        j = _bullets.Count - 1;
-                        _ufo.RemoveAt(i);
-                        i = _ufo.Count - 1;
-
+                        j = _bullets.Count - 1;                        
+                        i = DieUFO(i);
                          _ship . AddPoint();
                         continue;
                     }
@@ -243,6 +243,12 @@ namespace les_1
             }
         }
 
+
+        public static int DieUFO(int index)
+        {
+            _ufo.RemoveAt(index);
+            return _ufo.Count - 1;
+        }
         /// <summary>
         /// метод для обработки события Die
         /// </summary>
