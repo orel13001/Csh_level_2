@@ -30,7 +30,7 @@ namespace les_1
         /// </summary>
         const int MAX_Width = 1000, MAX_Height = 1000;
         public static List<BaseObject> _objs;
-        private static Bullet _bullet;
+        private static List<Bullet> _bullets = new List<Bullet>();
         private static List<UFO> _ufo;
         private static HelthBox _helth;
 
@@ -109,8 +109,8 @@ namespace les_1
 
         private static void Form_KeyDown (object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space) _bullet = new Bullet(new Point(_ship.Rect.X + _ship.Rect.Size.Width, _ship.Rect.Y + _ship.Rect.Size.Height / 2),
-                new Point(40, 0), new Size(4, 1));
+            if (e.KeyCode == Keys.Space) _bullets.Add(  new Bullet(new Point(_ship.Rect.X + _ship.Rect.Size.Width, _ship.Rect.Y + _ship.Rect.Size.Height / 2),
+                new Point(40, 0), new Size(4, 1)));
             if (e.KeyCode == Keys.Up) _ship.Up();
             if (e.KeyCode == Keys.Down) _ship.Down();
         }
@@ -135,7 +135,10 @@ namespace les_1
                 obj.Draw();
             foreach (BaseObject obj in _ufo)
                 obj?.Draw();
-            _bullet?.Draw();
+            foreach (var _bullet in _bullets)
+            {
+                _bullet?.Draw();
+            }
             _ship?.Draw();
             _helth?.Draw();
             if (_ship != null)
@@ -179,8 +182,15 @@ namespace les_1
         public static void Update()
         {
             _helth?.Update();
-            _bullet?.Update();
-            if (_bullet?.Rect.X == Game.Width) _bullet = null;
+            for (int i = 0; i< _bullets.Count; i++)
+            {
+                _bullets[i]?.Update();
+                if (_bullets[i]?.Rect.X == Game.Width)
+                { 
+                    _bullets.RemoveAt(i);
+                    i--;
+                }
+            }
             foreach (BaseObject obj in _objs)
             {
                 obj.Update();
@@ -189,13 +199,17 @@ namespace les_1
             {
                 if (_ufo[i] == null) continue;
                 _ufo[i].Update();
-                if (_bullet != null && _bullet.Collision(_ufo[i]))
+                for (int j = 0; j < _bullets.Count; j++)
                 {
-                    System.Media.SystemSounds.Hand.Play();
-                    _bullet = null;
-                    _ufo[i].ReDraw();
-                    _ship.AddPoint();
-                    continue;
+                    if (_bullets[j] != null && _bullets[j].Collision(_ufo[i]))
+                    {
+                        System.Media.SystemSounds.Hand.Play();
+                        _bullets.RemoveAt(j);
+                        j--;
+                        _ufo[i].ReDraw();
+                        _ship.AddPoint();
+                        continue;
+                    }
                 }
                 if (!_ship.Collision(_ufo[i])) continue;
                 _ship.EnergyLow(rnd.Next(1, 10));
