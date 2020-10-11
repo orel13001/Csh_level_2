@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace les_1
 {
+
+    public delegate void Message();
+
     /// <summary>
     /// базовый объект, отображаемый на форме
     /// </summary>
-    class BaseObject
+    abstract class BaseObject
     {
         /// <summary>
         /// позиция объекта
@@ -25,33 +29,78 @@ namespace les_1
         /// </summary>
         protected Size Size;
 
-        public BaseObject (Point pos, Point dir, Size size)
+        /// <summary>
+        /// Конструктор базоого объекта 
+        /// </summary>
+        /// <param name="pos">позиция базоого объекта </param>
+        /// <param name="dir">скорость базоого объекта </param>
+        /// <param name="size">размер базоого объекта </param>
+        protected BaseObject (Point pos, Point dir, Size size)
         {
-            Pos = pos;
-            Dir = dir;
-            Size = size;
+            try
+            {
+
+                Pos = pos;
+                Dir = dir;
+                Size = size;
+                if (Size.Width > 45 || Size.Height > 45 || Size.Width <= 0 || Size.Height <= 0) throw new SizeObjectException();
+                //if (Dir.X > 400 || Dir.Y > 400) throw new SpeedObjectException();
+            }
+            catch(SizeObjectException)
+            {
+                MessageBox.Show("Недопустимые размеры обекта! будут пременены параметры по умолчанию!", "Исключение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Size.Width = 45;
+                Size.Height = 45;
+            }
+            catch (SpeedObjectException)
+            {
+                MessageBox.Show("Недопустимая скорость обекта! будут пременены параметры по умолчанию!", "Исключение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Dir.X = 40;
+                Dir.Y = 40;
+            }
         }
-        private static Image img = Image.FromFile(@"meteor_PNG8.png");
         /// <summary>
         /// отрисовка объектов на форме
         /// </summary>
-        public virtual void Draw()
-        {
-            Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
-            
-        }
+        public abstract void Draw();
+        //{
+        //    Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+        //}
 
         /// <summary>
         /// обновление местоположения объекта
         /// </summary>
-        public virtual void Update()
+        public abstract void Update();
+        //{
+        //    Pos.X = Pos.X + Dir.X;
+        //    Pos.Y = Pos.Y + Dir.Y;
+        //    if (Pos.X < 0) { Dir.X = -Dir.X; }
+        //    if (Pos.X > Game.Width) { Dir.X = -Dir.X; }
+        //    if (Pos.Y < 0) { Dir.Y = -Dir.Y; }
+        //    if (Pos.Y > Game.Height) { Dir.Y = -Dir.Y; }
+        //}
+    }
+
+    /// <summary>
+    /// Класс-исключение для объектов большого размера
+    /// </summary>
+    class SizeObjectException : Exception
+    {
+        public string Msg { get; }
+        public SizeObjectException()
         {
-            Pos.X = Pos.X + Dir.X;
-            Pos.Y = Pos.Y + Dir.Y;
-            if (Pos.X < 0) { Dir.X = -Dir.X; }
-            if (Pos.X > Game.Width) { Dir.X = -Dir.X; }
-            if (Pos.Y < 0) { Dir.Y = -Dir.Y; }
-            if (Pos.Y > Game.Height) { Dir.Y = -Dir.Y; }
+            Msg = "Некорректные размеры объекта!";
+        }
+    }
+    /// <summary>
+    /// Класс-исключение для объектов с большой скоростью
+    /// </summary>
+    class SpeedObjectException : Exception
+    {
+        public string Msg { get; }
+        public SpeedObjectException()
+        {
+            Msg = "Некорректная скорость объекта!";
         }
     }
 }
